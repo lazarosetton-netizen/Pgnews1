@@ -1,31 +1,38 @@
 workflows:
   android-workflow:
-    name: PGNEWS Build Final
+    name: PGNEWS Stable Build
     max_build_duration: 30
     instance_type: mac_mini_m1
     scripts:
       - name: Install dependencies
         script: | 
-          # Instalando sem o arquivo de trava para evitar loops
+          # Limpeza profunda para evitar loops de 17 minutos
           npm install --no-package-lock
+          # Instalação explícita do plugin que causou o último erro
+          npm install @vitejs/plugin-react --save-dev
           npm install -g @capacitor/cli
       
       - name: Build web project
         script: |
-          # CI=false impede que o build pare por causa de avisos pequenos
-          CI=false NODE_ENV=production npx vite build
+          # CI=false garante que o build não pare por avisos simples
+          CI=false npx vite build
       
       - name: Cap Sync and Add Android
         script: |
-          # Garante a criação da pasta android no servidor do Codemagic
+          # Cria a pasta android caso ela não exista no seu GitHub
           npx cap add android || true
           npx cap sync android
       
       - name: Build Android APK
         script: |
+          # Entra na pasta e gera o arquivo instalável (.apk)
           cd android
-          # Comando para compilar o APK ignorando verificações rígidas
-          ./gradlew assembleDebug -x lint
+          ./gradlew assembleDebug
     
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
+    
+    publishing:
+      email:
+        recipients:
+          - seu-email@exemplo.com
