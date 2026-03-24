@@ -1,21 +1,38 @@
 workflows:
   android-workflow:
-    name: Android Build
+    name: PGNEWS Android Build
     max_build_duration: 60
     instance_type: mac_mini_m1
+    environment:
+      node: latest
     scripts:
       - name: Install dependencies
         script: | 
           npm install
+          # Garante que o Capacitor esteja instalado globalmente no build
+          npm install -g @capacitor/cli
+      
       - name: Build web project
         script: |
+          # Gera a pasta 'dist' com o código do React
           npm run build
-      - name: Cap Sync
+      
+      - name: Cap Sync and Add Android
         script: |
+          # Adiciona a pasta android se ela não existir e sincroniza os arquivos
+          npx cap add android || true
           npx cap sync android
+      
       - name: Build Android APK
         script: |
+          # Entra na pasta do Android e compila o aplicativo
           cd android
           ./gradlew assembleDebug
+    
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
+    
+    publishing:
+      email:
+        recipients:
+          - seu-email@exemplo.com # Troque pelo seu email para receber o link do APK
