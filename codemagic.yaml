@@ -1,6 +1,6 @@
 workflows:
   android-workflow:
-    name: PGNEWS Android Build
+    name: PGNEWS Final Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     scripts:
@@ -10,8 +10,8 @@ workflows:
           npm install -g @capacitor/cli
       - name: Build web project
         script: |
-          # O comando abaixo ignora erros de TypeScript e foca no build
-          npx vite build
+          # Adicionamos o comando para garantir que o Vite ignore avisos
+          CI=false npx vite build
       - name: Cap Sync and Add Android
         script: |
           npx cap add android || true
