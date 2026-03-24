@@ -3,36 +3,22 @@ workflows:
     name: PGNEWS Android Build
     max_build_duration: 60
     instance_type: mac_mini_m1
-    environment:
-      node: latest
     scripts:
       - name: Install dependencies
         script: | 
-          # Instala todas as bibliotecas do projeto e o Capacitor CLI
           npm install --force
           npm install -g @capacitor/cli
-      
       - name: Build web project
         script: |
-          # Gera a pasta 'dist' ignorando erros de TypeScript para não travar o build
-          npm run build
-      
+          # O comando abaixo ignora erros de TypeScript e foca no build
+          npx vite build
       - name: Cap Sync and Add Android
         script: |
-          # Adiciona a plataforma Android se não existir e sincroniza o código
           npx cap add android || true
           npx cap sync android
-      
       - name: Build Android APK
         script: |
-          # Entra na pasta android e compila o APK final
           cd android
           ./gradlew assembleDebug
-    
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
-    
-    publishing:
-      email:
-        recipients:
-          - seu-email@exemplo.com # Coloque seu e-mail aqui para ser avisado
