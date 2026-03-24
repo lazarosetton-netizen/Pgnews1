@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", serif;
+
+  --color-israel-blue: #0038b8;
+  --color-israel-light: #f0f4ff;
+}
+
+:root {
+  --bg: #f8f9fa;
+  --ink: #1a1a1a;
+  --line: #e5e7eb;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+.news-card {
+  border-bottom: 1px solid var(--line);
+  transition: all 0.2s ease;
+}
+
+.news-card:hover {
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.pro-israel-box {
+  background-color: var(--color-israel-light);
+  border-left: 4px solid var(--color-israel-blue);
+}
+
+.markdown-body h1 { @apply text-2xl font-bold mb-4; }
+.markdown-body h2 { @apply text-xl font-bold mb-3; }
+.markdown-body p { @apply mb-4 leading-relaxed; }
+.markdown-body ul { @apply list-disc pl-5 mb-4; }
+.markdown-body li { @apply mb-1; }
+
