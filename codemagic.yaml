@@ -1,6 +1,6 @@
 workflows:
   android-workflow:
-    name: PGNEWS Final Build
+    name: PGNEWS Final Stable Build
     max_build_duration: 60
     instance_type: mac_mini_m1
     scripts:
@@ -8,17 +8,24 @@ workflows:
         script: | 
           npm install --force
           npm install -g @capacitor/cli
+      
       - name: Build web project
         script: |
-          # Adicionamos o comando para garantir que o Vite ignore avisos
-          CI=false npx vite build
+          # CI=false ignora avisos que travam o build
+          # NODE_ENV=production otimiza o código final
+          CI=false NODE_ENV=production npx vite build
+      
       - name: Cap Sync and Add Android
         script: |
+          # Garante que a estrutura Android exista
           npx cap add android || true
           npx cap sync android
+      
       - name: Build Android APK
         script: |
+          # Gera o arquivo .apk para instalar no celular
           cd android
           ./gradlew assembleDebug
+    
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
