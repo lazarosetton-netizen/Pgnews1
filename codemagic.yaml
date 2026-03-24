@@ -8,24 +8,24 @@ workflows:
     scripts:
       - name: Install dependencies
         script: | 
-          npm install
-          # Garante que o Capacitor esteja instalado globalmente no build
+          # Instala todas as bibliotecas do projeto e o Capacitor CLI
+          npm install --force
           npm install -g @capacitor/cli
       
       - name: Build web project
         script: |
-          # Gera a pasta 'dist' com o código do React
+          # Gera a pasta 'dist' ignorando erros de TypeScript para não travar o build
           npm run build
       
       - name: Cap Sync and Add Android
         script: |
-          # Adiciona a pasta android se ela não existir e sincroniza os arquivos
+          # Adiciona a plataforma Android se não existir e sincroniza o código
           npx cap add android || true
           npx cap sync android
       
       - name: Build Android APK
         script: |
-          # Entra na pasta do Android e compila o aplicativo
+          # Entra na pasta android e compila o APK final
           cd android
           ./gradlew assembleDebug
     
@@ -35,4 +35,4 @@ workflows:
     publishing:
       email:
         recipients:
-          - seu-email@exemplo.com # Troque pelo seu email para receber o link do APK
+          - seu-email@exemplo.com # Coloque seu e-mail aqui para ser avisado
