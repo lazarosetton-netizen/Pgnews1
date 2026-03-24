@@ -6,33 +6,24 @@ workflows:
     scripts:
       - name: Install dependencies
         script: | 
-          # Limpeza profunda para evitar loops de 17 minutos
+          # O --no-package-lock evita loops de tempo
           npm install --no-package-lock
-          # Instalação explícita do plugin que causou o último erro
-          npm install @vitejs/plugin-react --save-dev
           npm install -g @capacitor/cli
       
       - name: Build web project
         script: |
-          # CI=false garante que o build não pare por avisos simples
+          # CI=false ignora avisos de tipos e foca na compilação
           CI=false npx vite build
       
       - name: Cap Sync and Add Android
         script: |
-          # Cria a pasta android caso ela não exista no seu GitHub
           npx cap add android || true
           npx cap sync android
       
       - name: Build Android APK
         script: |
-          # Entra na pasta e gera o arquivo instalável (.apk)
           cd android
           ./gradlew assembleDebug
     
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
-    
-    publishing:
-      email:
-        recipients:
-          - seu-email@exemplo.com
